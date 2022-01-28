@@ -1,6 +1,7 @@
 type
   SnowieOpCode* = enum
-    OP_HLT,
+    OP_LOAD,
+    OP_HALT,
     OP_IGL
 
   SnowieInstruction* = object
@@ -20,5 +21,3 @@ proc newSnowieInstruction*(opcode: SnowieOpCode): SnowieInstruction =
 ## create a new instruction with given uint8
 proc newSnowieInstruction*(opcode: uint8): SnowieInstruction =
   SnowieInstruction(opcode: op(opcode))
-
-## convert int
