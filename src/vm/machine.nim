@@ -4,6 +4,7 @@ type
   SpecRegister = object
     pc*: uint                     ## program counter
     exitCode*: int                ## program exit code used in HALT
+    zero*: bool                   ## zero status - logical operations
     reminder*: uint32             ## reminder o' last DIV instruction
 
   SnowieVM* = object
@@ -47,39 +48,87 @@ proc executeInstruction(this: var SnowieVM): SnowieVmStatus =
     let register = this.getNext8bitsOperand()
     let numberOperand = this.getNext16bitsOperand()
     this.registers[register] = int32(numberOperand)
-    return VM_CONT_EXECUTE
   of OP_ADD:
     let a = this.registers[this.getNext8bitsOperand()]
     let b = this.registers[this.getNext8bitsOperand()]
     this.registers[this.getNext8bitsOperand()] = a + b
-    return VM_CONT_EXECUTE
   of OP_SUB:
     let a = this.registers[this.getNext8bitsOperand()]
     let b = this.registers[this.getNext8bitsOperand()]
     this.registers[this.getNext8bitsOperand()] = a - b
-    return VM_CONT_EXECUTE
   of OP_MUL:
     let a = this.registers[this.getNext8bitsOperand()]
     let b = this.registers[this.getNext8bitsOperand()]
     this.registers[this.getNext8bitsOperand()] = a * b
-    return VM_CONT_EXECUTE
   of OP_DIV:
     let a = this.registers[this.getNext8bitsOperand()]
     let b = this.registers[this.getNext8bitsOperand()]
     this.registers[this.getNext8bitsOperand()] = a div b
     # "mod" is more cpu expansive than "and"
     this.specRegisters.reminder = uint32(a and b - 1) # a % b == a & b - 1
-    return VM_CONT_EXECUTE
   of OP_MOD:
     let a = this.registers[this.getNext8bitsOperand()]
     let b = this.registers[this.getNext8bitsOperand()]
     this.registers[this.getNext8bitsOperand()] = a and b - 1 # a % b == a & b - 1
-    return VM_CONT_EXECUTE
+  of OP_JMP:
+    let targetJmp = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.pc = uint(targetJmp)
+  of OP_FJMP:
+    let amount = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.pc += uint(amount)
+  of OP_RJMP:
+    let amount = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.pc -= uint(amount)
+  of OP_EQ:
+    let a = this.registers[this.getNext8bitsOperand()]
+    let b = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.zero = a == b
+  of OP_NE:
+    let a = this.registers[this.getNext8bitsOperand()]
+    let b = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.zero = a != b
+  of OP_LT:
+    let a = this.registers[this.getNext8bitsOperand()]
+    let b = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.zero = a < b
+  of OP_GT:
+    let a = this.registers[this.getNext8bitsOperand()]
+    let b = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.zero = a > b
+  of OP_LE:
+    let a = this.registers[this.getNext8bitsOperand()]
+    let b = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.zero = a <= b
+  of OP_GE:
+    let a = this.registers[this.getNext8bitsOperand()]
+    let b = this.registers[this.getNext8bitsOperand()]
+    this.specRegisters.zero = a >= b
+  of OP_JZ:
+    let targetJmp = this.registers[this.getNext8bitsOperand()]
+    if this.specRegisters.zero: this.specRegisters.pc = uint(targetJmp)
+  of OP_JNZ:
+    let targetJmp = this.registers[this.getNext8bitsOperand()]
+    if not this.specRegisters.zero: this.specRegisters.pc = uint(targetJmp)
+  of OP_FJZ:
+    let amount = this.registers[this.getNext8bitsOperand()]
+    if this.specRegisters.zero: this.specRegisters.pc += uint(amount)
+  of OP_RJZ:
+    let amount = this.registers[this.getNext8bitsOperand()]
+    if this.specRegisters.zero: this.specRegisters.pc -= uint(amount)
+  of OP_FJNZ:
+    let amount = this.registers[this.getNext8bitsOperand()]
+    if not this.specRegisters.zero: this.specRegisters.pc += uint(amount)
+  of OP_RJNZ:
+    let amount = this.registers[this.getNext8bitsOperand()]
+    if not this.specRegisters.zero: this.specRegisters.pc -= uint(amount)
   of OP_HALT:
     let exitCode = this.registers[this.getNext8bitsOperand()]
     this.specRegisters.exitCode = int(exitCode)
     return VM_EXIT_SUCCESS
-  else: return VM_EXIT_ILLEGAL
+  else:
+    return VM_EXIT_ILLEGAL
+  # need more instructions
+  return VM_CONT_EXECUTE
 
 ## execute one step ( instruction )
 proc execOneStep*(this: var SnowieVM): SnowieVmStatus = this.executeInstruction()

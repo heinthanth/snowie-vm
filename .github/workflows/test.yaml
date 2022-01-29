@@ -7,7 +7,7 @@ on:
 jobs:
   test-on-linux:
     name: "test on Linux"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: "install latest nim"
         working-directory: /opt
@@ -21,7 +21,7 @@ jobs:
         run: nimble test -d:release
   test-on-macos:
     name: "test on macOS"
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - name: "install latest nim"
         run: brew install nim
@@ -31,7 +31,7 @@ jobs:
         run: nimble test -d:release
   test-on-windows:
     name: "test on Windows"
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - name: "install latest nim"
         run: |

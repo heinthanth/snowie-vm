@@ -6,6 +6,21 @@ type
     OP_MUL,
     OP_DIV,
     OP_MOD,
+    OP_JMP,
+    OP_FJMP,
+    OP_RJMP
+    OP_EQ,
+    OP_NE,
+    OP_LT,
+    OP_GT,
+    OP_LE,
+    OP_GE,
+    OP_JZ,
+    OP_JNZ,
+    OP_FJZ,
+    OP_RJZ,
+    OP_FJNZ,
+    OP_RJNZ,
     OP_HALT,
     OP_IGL
 
