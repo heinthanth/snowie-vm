@@ -9,7 +9,7 @@ jobs:
     name: "test on Linux"
     runs-on: ubuntu-20.04
     steps:
-      - name: "install nim 1.6.2"
+      - name: "install latest nim"
         working-directory: /opt
         run: |
           curl https://nim-lang.org/install_unix.html | grep -o "['\"]/download/nim-.*-linux_x64.tar.xz['\"]" | sed "s/[\"']//g" | xargs -I {} curl -O https://nim-lang.org{}
@@ -23,7 +23,7 @@ jobs:
     name: "test on macOS"
     runs-on: macos-11
     steps:
-      - name: "install nim 1.6.2"
+      - name: "install latest nim"
         run: brew install nim
       - name: "clone snowie"
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
     name: "test on Windows"
     runs-on: windows-2022
     steps:
-      - name: "install nim 1.6.2"
+      - name: "install latest nim"
         run: |
           choco install nim --no-progress
           echo (Get-ChildItem -Path C:\tools\Nim\nim-*\bin | % { $_.FullName }) | Out-File -FilePath $env:GITHUB_PATH -Append
