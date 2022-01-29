@@ -1,1 +1,6 @@
-bin
+bin/*
+!bin/.gitkeep
+
+tests/*
+!tests/*.cfg
+!tests/*.nim

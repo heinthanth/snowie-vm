@@ -1,6 +1,11 @@
 type
   SnowieOpCode* = enum
     OP_LOAD,
+    OP_ADD,
+    OP_SUB,
+    OP_MUL,
+    OP_DIV,
+    OP_MOD,
     OP_HALT,
     OP_IGL
 
