@@ -6,4 +6,4 @@ srcDir        = "src"
 bin           = @["snowie"]
 binDir        = "bin"
 
-requires "nim >= 1.6.2"
+requires "nim >= 1.6.2", "noise >= 0.1.4"

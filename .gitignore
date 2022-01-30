@@ -1,6 +1,14 @@
+# compiled bin
 bin/*
 !bin/.gitkeep
 
+# compiled test bin
 tests/*
 !tests/*.cfg
 !tests/*.nim
+
+# snowie asm and src
+*.snc .sn
+
+# misc
+.DS_Store
