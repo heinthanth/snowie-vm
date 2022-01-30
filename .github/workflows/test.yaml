@@ -18,7 +18,7 @@ jobs:
       - name: "clone snowie"
         uses: actions/checkout@v2
       - name: "run snowie tests"
-        run: nimble test -d:release
+        run: nimble test -y -d:release
   test-on-macos:
     name: "test on macOS"
     runs-on: macos-latest
@@ -28,7 +28,7 @@ jobs:
       - name: "clone snowie"
         uses: actions/checkout@v2
       - name: "run snowie tests"
-        run: nimble test -d:release
+        run: nimble test -y -d:release
   test-on-windows:
     name: "test on Windows"
     runs-on: windows-latest
@@ -40,4 +40,4 @@ jobs:
       - name: "clone snowie"
         uses: actions/checkout@v2
       - name: "run snowie tests"
-        run: nimble test -d:release
+        run: nimble test -y -d:release
